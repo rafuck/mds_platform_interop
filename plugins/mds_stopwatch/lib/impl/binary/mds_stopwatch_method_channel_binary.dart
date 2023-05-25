@@ -30,7 +30,7 @@ class MethodChannelMdsStopwatchBinary extends MdsStopwatchPlatformBinary {
   Stream<Duration> get elapsedStream => _elapsedStream.stream;
 
   MethodChannelMdsStopwatchBinary() {
-    binaryMessendger.setMessageHandler(_kBinaryEventChannel, (message) {
+    binaryMessenger.setMessageHandler(_kBinaryEventChannel, (message) {
       if (message == null) {
         return null;
       }
@@ -41,9 +41,9 @@ class MethodChannelMdsStopwatchBinary extends MdsStopwatchPlatformBinary {
     });
   }
 
-  BinaryMessenger? _binaryMessendger;
-  BinaryMessenger get binaryMessendger =>
-      _binaryMessendger ??= _findBinaryMessenger();
+  BinaryMessenger? _binaryMessenger;
+  BinaryMessenger get binaryMessenger =>
+      _binaryMessenger ??= _findBinaryMessenger();
   BinaryMessenger _findBinaryMessenger() {
     return !kIsWeb && ServicesBinding.rootIsolateToken == null
         ? BackgroundIsolateBinaryMessenger.instance
@@ -52,6 +52,6 @@ class MethodChannelMdsStopwatchBinary extends MdsStopwatchPlatformBinary {
 
   Future<void> _invokeMethod(String method) async {
     final Uint8List encoded = utf8.encoder.convert(method);
-    await binaryMessendger.send(_kBinaryChannel, encoded.buffer.asByteData());
+    await binaryMessenger.send(_kBinaryChannel, encoded.buffer.asByteData());
   }
 }

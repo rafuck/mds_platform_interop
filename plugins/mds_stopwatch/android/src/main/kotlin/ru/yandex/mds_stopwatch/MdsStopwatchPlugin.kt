@@ -24,6 +24,8 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.BinaryMessenger.BinaryMessageHandler;
 import io.flutter.plugin.common.BinaryMessenger.BinaryReply;
 
+import ru.yandex.mds_stopwatch.ButtonPlatformViewFactory
+
 /** MdsStopwatchPlugin */
 class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
   private lateinit var channel : MethodChannel
@@ -45,11 +47,15 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
 
     eventChannel = EventChannel(binaryMessenger, "mds_stopwatch_event")
     eventChannel.setStreamHandler(this)
+
+    flutterPluginBinding.platformViewRegistry.registerViewFactory(
+        ButtonPlatformViewFactory.TYPE,
+        ButtonPlatformViewFactory(flutterPluginBinding),
+    )
   }
 
   // EventChannel.StreamHandler methods
-  override fun onListen(
-    arguments: Any?, eventSink: EventSink?) {
+  override fun onListen(arguments: Any?, eventSink: EventSink?) {
     this.eventSink = eventSink
   }
   override fun onCancel(arguments: Any?) {

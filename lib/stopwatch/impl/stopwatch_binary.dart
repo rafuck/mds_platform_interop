@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:mds_stopwatch/mds_stopwatch.dart';
 import '../stopwatch.dart';
 
-const _kAccuracy = Duration(milliseconds: 1);
-
 class StopwatchBinary implements IStopwatch {
   //-- Private state
   final stopwatch = MdsStopwatchBinary();
@@ -26,16 +24,17 @@ class StopwatchBinary implements IStopwatch {
     _stateStream.add(_state);
   }
 
-  final Duration accuracy;
-
   //-- IStopwatch public interface
+  @override
+  String get name => 'BMs';
+
   @override
   bool get isRunned => _state == StopwatchState.runned;
 
   @override
   bool get isPaused => !isRunned;
 
-  StopwatchBinary({this.accuracy = _kAccuracy}) {
+  StopwatchBinary() {
     _finalizer.attach(this, this, detach: this);
   }
 

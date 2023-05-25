@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'stopwatch/stopwatch.dart';
+import 'native_button/native_button.dart';
 
 const kTitle = 'Stopwatch';
 
@@ -24,70 +25,91 @@ class StopwatchApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-  final stopWatch = StopwatchChannels();
+  final stopWatches = [
+    StopwatchChannels(),
+    StopwatchBinary(),
+    StopwatchStd(),
+  ];
 
   void _startOrPause() {
-    if (stopWatch.isRunned) {
-      stopWatch.stop();
+    if (stopWatches[0].isRunned) {
+      for (final sw in stopWatches) {
+        sw.stop();
+      }
     } else {
-      stopWatch.start();
+      for (final sw in stopWatches) {
+        sw.start();
+      }
     }
   }
 
   void _reset() {
-    stopWatch.reset();
+    for (final sw in stopWatches) {
+      sw.reset();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(kTitle),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Elapsed',
+        appBar: AppBar(
+          title: const Text(kTitle),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 60,
+                width: 200,
+                child: NativeButton(text: '0'),
+              ),
+              const SizedBox(height: 50),
+              const Text(
+                'Elapsed',
+              ),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: stopWatches.map((IStopwatch sw) {
+                    return StreamBuilder(
+                      initialData: sw.elapsed,
+                      stream: sw.elapsedStream,
+                      builder: (context, snapshot) {
+                        final elapsed =
+                            (snapshot.data!.inMilliseconds.toDouble() / 1e3)
+                                .toStringAsFixed(1);
+                        return Text(
+                          "${sw.name} $elapsed sec.",
+                          style: Theme.of(context).textTheme.headlineLarge,
+                          textAlign: TextAlign.right,
+                        );
+                      },
+                    );
+                  }).toList()),
+            ],
+          ),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: _reset,
+              tooltip: 'Reset',
+              child: const Icon(Icons.restart_alt),
             ),
-            StreamBuilder(
-              initialData: stopWatch.elapsed,
-              stream: stopWatch.elapsedStream,
-              builder: (context, snapshot) {
-                final elapsed = (snapshot.data!.inMicroseconds.toDouble() / 1e6)
-                    .toStringAsFixed(6);
-                return Text(
-                  "$elapsed sec.",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                );
-              },
+            const SizedBox(width: 16),
+            FloatingActionButton(
+              onPressed: _startOrPause,
+              tooltip: 'Play/Pause',
+              child: StreamBuilder(
+                initialData: StopwatchState.paused,
+                stream: stopWatches[0].stateStream,
+                builder: (_, __) => (stopWatches[0].isPaused)
+                    ? const Icon(Icons.play_arrow)
+                    : const Icon(Icons.pause),
+              ),
             ),
           ],
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: _reset,
-            tooltip: 'Reset',
-            child: const Icon(Icons.restart_alt),
-          ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            onPressed: _startOrPause,
-            tooltip: 'Play/Pause',
-            child: StreamBuilder(
-              initialData: StopwatchState.paused,
-              stream: stopWatch.stateStream,
-              builder: (_, __) => (stopWatch.isPaused)
-                  ? const Icon(Icons.play_arrow)
-                  : const Icon(Icons.pause),
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

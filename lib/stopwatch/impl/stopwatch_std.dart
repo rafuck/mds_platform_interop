@@ -1,7 +1,7 @@
 import 'dart:async';
 import '../stopwatch.dart';
 
-const _kAccuracy = Duration(milliseconds: 1);
+const _kAccuracy = Duration(milliseconds: 100);
 
 class StopwatchStd implements IStopwatch {
   //-- Private state
@@ -28,16 +28,17 @@ class StopwatchStd implements IStopwatch {
     _stateStream.add(_state);
   }
 
-  final Duration accuracy;
-
   //-- IStopwatch public interface
+  @override
+  String get name => 'Std';
+
   @override
   bool get isRunned => _state == StopwatchState.runned;
 
   @override
   bool get isPaused => !isRunned;
 
-  StopwatchStd({this.accuracy = _kAccuracy}) {
+  StopwatchStd() {
     _finalizer.attach(this, this, detach: this);
   }
 
@@ -48,7 +49,7 @@ class StopwatchStd implements IStopwatch {
     }
     stop();
     _ticker = Timer.periodic(
-      accuracy,
+      _kAccuracy,
       (timer) {
         _elapsed += _kAccuracy;
         _elapsedStream.add(_elapsed);

@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:mds_stopwatch/mds_stopwatch.dart';
 import '../stopwatch.dart';
 
-const _kAccuracy = Duration(milliseconds: 1);
-
 class StopwatchChannels implements IStopwatch {
   //-- Private state
   final stopwatch = MdsStopwatchChannels();
@@ -26,16 +24,17 @@ class StopwatchChannels implements IStopwatch {
     _stateStream.add(_state);
   }
 
-  final Duration accuracy;
-
   //-- IStopwatch public interface
+  @override
+  String get name => 'PCh';
+
   @override
   bool get isRunned => _state == StopwatchState.runned;
 
   @override
   bool get isPaused => !isRunned;
 
-  StopwatchChannels({this.accuracy = _kAccuracy}) {
+  StopwatchChannels() {
     _finalizer.attach(this, this, detach: this);
   }
 

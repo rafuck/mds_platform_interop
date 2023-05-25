@@ -20,24 +20,26 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.BinaryMessenger.BinaryMessageHandler;
 import io.flutter.plugin.common.BinaryMessenger.BinaryReply;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.EventSink;
 
-class StopwatchBinary{
-  private var accuracyMilliseconds: Long = 1.toLong()
+class StopwatchChannel{
+  private var accuracyMilliseconds: Long = 100.toLong()
   var isRunned: Boolean = false
     private set
-  var expiredMilliseconds: Long = 0.toLong()
+  var elapsedMilliseconds: Long = 0.toLong()
     private set
   private var timerTask: TimerTask? = null;
 
-  fun start(binaryMessenger: BinaryMessenger){
+  fun start(eventSink: EventSink?){
     if (isRunned || accuracyMilliseconds < 1){
       return
     }
 
     stop()
     timerTask = Timer().scheduleAtFixedRate(0, accuracyMilliseconds){
-      expiredMilliseconds += accuracyMilliseconds
-      sendElapsed(binaryMessenger)
+      elapsedMilliseconds += accuracyMilliseconds
+      sendElapsed(eventSink)
     }
     isRunned = true
   }
@@ -51,16 +53,14 @@ class StopwatchBinary{
     isRunned = false
   }
 
-  fun reset(binaryMessenger: BinaryMessenger){
-    expiredMilliseconds = 0
-    sendElapsed(binaryMessenger)
+  fun reset(eventSink: EventSink?){
+    elapsedMilliseconds = 0
+    sendElapsed(eventSink)
   }
 
-  private fun sendElapsed(binaryMessenger: BinaryMessenger){
+  private fun sendElapsed(eventSink: EventSink?){
     Handler(Looper.getMainLooper()).post {
-      val message = ByteBuffer.allocateDirect(8)
-      message.putLong(expiredMilliseconds)
-      binaryMessenger.send("mds_stopwatch_binary_event", message);
+        eventSink?.success(elapsedMilliseconds)
     }
   }
 }

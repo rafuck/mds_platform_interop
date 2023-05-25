@@ -6,6 +6,7 @@ export './impl/stopwatch_channels.dart';
 enum StopwatchState { paused, runned }
 
 abstract class IStopwatch {
+  String get name;
   bool get isPaused;
   bool get isRunned;
   void reset();
