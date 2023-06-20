@@ -75,6 +75,9 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
       stopwatchChannel.reset(eventSink);
       result.success(null)
     }
+    else if (call.method == "trigger_error"){
+      result.error("Error code", "Error message", "Error description");
+    }
     else {
       result.notImplemented()
     }

@@ -90,10 +90,10 @@ class _NativeButtonState extends State<NativeButton> {
         );
       } else {
         return AndroidView(
+          onPlatformViewCreated: _onPlatformViewCreated,
           viewType: NativeButton._viewType,
           layoutDirection: TextDirection.ltr,
           creationParams: widget.text,
-          onPlatformViewCreated: _onPlatformViewCreated,
           creationParamsCodec: const StandardMessageCodec(),
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
             Factory(() => LongPressGestureRecognizer())

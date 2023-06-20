@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -16,19 +17,34 @@ class MethodChannelMdsStopwatch extends MdsStopwatchPlatform {
   @visibleForTesting
   final eventChannel = const EventChannel(_kEventChannel);
 
+  Future _safeInvoke(String method) async {
+    try {
+      return await methodChannel.invokeMethod<String>(method);
+    } on PlatformException catch (ex) {
+      debugPrint(ex.message);
+      return null;
+    } on UnimplementedError {
+      debugPrint("$method is unimplemented");
+      return null;
+    } on MissingPluginException {
+      debugPrint('Plugin is not registered');
+      return null;
+    }
+  }
+
   @override
   Future<void> start() async {
-    await methodChannel.invokeMethod<String>('start');
+    await _safeInvoke('start');
   }
 
   @override
   Future<void> stop() async {
-    await methodChannel.invokeMethod<String>('stop');
+    await _safeInvoke('stop');
   }
 
   @override
   Future<void> reset() async {
-    await methodChannel.invokeMethod<String>('reset');
+    await _safeInvoke('reset');
   }
 
   @override

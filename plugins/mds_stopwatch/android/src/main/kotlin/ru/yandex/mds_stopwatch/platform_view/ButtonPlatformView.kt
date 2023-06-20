@@ -12,8 +12,7 @@ class ButtonPlatformView(
     id: Int,
     creationParams: String,
     flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
-) :
-    PlatformView {
+) : PlatformView {
     private val methodChannel =
         MethodChannel(flutterPluginBinding.binaryMessenger, "mds_native_button_$id")
 
