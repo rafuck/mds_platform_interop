@@ -33,8 +33,10 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
   private var eventSink: EventSink? = null
   private var stopwatchChannel = StopwatchChannel()
 
-  private var stopwatchBinary = StopwatchBinary()
-  private lateinit var binaryMessenger: BinaryMessenger;
+  /* Hide stopwatch based on BinaryMessenger
+    private var stopwatchBinary = StopwatchBinary()
+    private lateinit var binaryMessenger: BinaryMessenger;
+  */
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     binaryMessenger = flutterPluginBinding.binaryMessenger;
