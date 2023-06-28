@@ -1,23 +1,26 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../ffi/ffi.dart';
-
 const _kChannelPrefix = 'mds_native_button';
+
+typedef TitleSetter = String? Function();
 
 class NativeButton extends StatefulWidget {
   static const _viewType = 'native_button';
   final bool useHybridComposition;
   final String text;
+  final TitleSetter? onClick;
 
   const NativeButton({
     Key? key,
     this.useHybridComposition = true,
+    this.onClick,
     required this.text,
   }) : super(key: key);
 
@@ -27,14 +30,12 @@ class NativeButton extends StatefulWidget {
 
 class _NativeButtonState extends State<NativeButton> {
   MethodChannel? _methodChannel;
-  int _counter = 0;
 
   void _onPlatformViewCreated(int viewId) {
     _methodChannel = MethodChannel('${_kChannelPrefix}_$viewId');
     _methodChannel?.setMethodCallHandler((call) async {
-      if (call.method == "onClick") {
-        _counter = incrementWithFFI(_counter);
-        return '$_counter';
+      if (call.method == "onClick" && widget.onClick != null) {
+        return widget.onClick!();
       }
     });
   }

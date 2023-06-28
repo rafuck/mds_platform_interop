@@ -86,6 +86,7 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
     binaryMessenger.setMessageHandler("mds_stopwatch_binary", null)
+    eventChannel.setStreamHandler(null)
   }
 
   private fun binaryMessageHandler(message: ByteBuffer?, @NonNull reply: BinaryReply){

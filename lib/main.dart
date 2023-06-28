@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'stopwatch/stopwatch.dart';
-import 'native_button/native_button.dart';
+import 'button_click_counter/button_click_counter.dart';
 
 const kTitle = 'Stopwatch';
 
@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
               const SizedBox(
                 height: 60,
                 width: 200,
-                child: NativeButton(text: '0'),
+                child: ButtonClickCounter(),
               ),
               const SizedBox(height: 50),
               const Text(

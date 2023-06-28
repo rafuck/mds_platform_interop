@@ -19,7 +19,7 @@ class MethodChannelMdsStopwatch extends MdsStopwatchPlatform {
 
   Future _safeInvoke(String method) async {
     try {
-      return await methodChannel.invokeMethod<String>(method);
+      return await methodChannel.invokeMethod(method);
     } on PlatformException catch (ex) {
       debugPrint(ex.message);
       return null;
@@ -33,23 +33,26 @@ class MethodChannelMdsStopwatch extends MdsStopwatchPlatform {
   }
 
   @override
-  Future<void> start() async {
+  Future start() async {
     await _safeInvoke('start');
   }
 
   @override
-  Future<void> stop() async {
+  Future stop() async {
     await _safeInvoke('stop');
   }
 
   @override
-  Future<void> reset() async {
+  Future reset() async {
     await _safeInvoke('reset');
   }
 
+  Stream<dynamic>? _eventChannelStream;
   @override
-  Stream<Duration> get elapsedStream => eventChannel
-      .receiveBroadcastStream()
-      .where((val) => val is int)
-      .map((val) => Duration(milliseconds: val as int));
+  Stream<Duration> get elapsedStream {
+    _eventChannelStream ??= eventChannel.receiveBroadcastStream();
+    return _eventChannelStream!
+        .where((val) => val is int)
+        .map((val) => Duration(milliseconds: val as int));
+  }
 }
