@@ -29,13 +29,15 @@ import ru.yandex.mds_stopwatch.ButtonPlatformViewFactory
 /** MdsStopwatchPlugin */
 class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
   private lateinit var channel : MethodChannel
+  private lateinit var binaryMessenger: BinaryMessenger;
+  
   private lateinit var eventChannel : EventChannel
   private var eventSink: EventSink? = null
+
   private var stopwatchChannel = StopwatchChannel()
 
   /* Hide stopwatch based on BinaryMessenger
     private var stopwatchBinary = StopwatchBinary()
-    private lateinit var binaryMessenger: BinaryMessenger;
   */
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
