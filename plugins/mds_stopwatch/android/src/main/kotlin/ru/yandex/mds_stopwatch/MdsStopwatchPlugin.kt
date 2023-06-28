@@ -38,9 +38,6 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     binaryMessenger = flutterPluginBinding.binaryMessenger;
-    binaryMessenger.setMessageHandler("mds_stopwatch_binary") { message, reply ->
-      binaryMessageHandler(message, reply);
-    }
 
     channel = MethodChannel(binaryMessenger, "mds_stopwatch")
     channel.setMethodCallHandler(this)
@@ -52,6 +49,12 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
         ButtonPlatformViewFactory.TYPE,
         ButtonPlatformViewFactory(flutterPluginBinding),
     )
+
+    /* Hide stopwatch based on BinaryMessenger
+      binaryMessenger.setMessageHandler("mds_stopwatch_binary") { message, reply ->
+        binaryMessageHandler(message, reply);
+      }
+    */
   }
 
   // EventChannel.StreamHandler methods
@@ -85,8 +88,11 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
-    binaryMessenger.setMessageHandler("mds_stopwatch_binary", null)
     eventChannel.setStreamHandler(null)
+
+    /* Hide stopwatch based on BinaryMessenger
+      binaryMessenger.setMessageHandler("mds_stopwatch_binary", null)
+    */
   }
 
   private fun binaryMessageHandler(message: ByteBuffer?, @NonNull reply: BinaryReply){
