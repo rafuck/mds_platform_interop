@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
   final stopWatches = [
     StopwatchChannels(),
-    StopwatchBinary(),
+    //StopwatchBinary(),
     StopwatchStd(),
   ];
 
