@@ -4,7 +4,7 @@ import '../stopwatch.dart';
 
 class StopwatchChannels implements IStopwatch {
   //-- Private state
-  final stopwatch = MdsStopwatchChannels();
+  final _stopwatch = MdsStopwatchChannels();
 
   StopwatchState _state = StopwatchState.paused;
   Duration _elapsed = const Duration();
@@ -43,7 +43,7 @@ class StopwatchChannels implements IStopwatch {
     if (isRunned) {
       return;
     }
-    stopwatch.start();
+    _stopwatch.start();
     _setState(StopwatchState.runned);
   }
 
@@ -52,13 +52,13 @@ class StopwatchChannels implements IStopwatch {
     if (isPaused) {
       return;
     }
-    stopwatch.stop();
+    _stopwatch.stop();
     _setState(StopwatchState.paused);
   }
 
   @override
   void reset() {
-    stopwatch.reset();
+    _stopwatch.reset();
     _elapsed = const Duration();
   }
 
@@ -66,7 +66,7 @@ class StopwatchChannels implements IStopwatch {
   Duration get elapsed => _elapsed;
 
   @override
-  Stream<Duration> get elapsedStream => stopwatch.elapsedStream;
+  Stream<Duration> get elapsedStream => _stopwatch.elapsedStream;
 
   @override
   StopwatchState get state => _state;

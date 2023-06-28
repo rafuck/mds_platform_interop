@@ -18,11 +18,11 @@ class NativeButton extends StatefulWidget {
   final TitleSetter? onClick;
 
   const NativeButton({
-    Key? key,
+    super.key,
     this.useHybridComposition = true,
     this.onClick,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   State<NativeButton> createState() => _NativeButtonState();
@@ -56,11 +56,22 @@ class _NativeButtonState extends State<NativeButton> {
         creationParams: widget.text,
         creationParamsCodec: const StandardMessageCodec(),
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-          Factory(() => LongPressGestureRecognizer())
+          Factory(() => TapGestureRecognizer())
         },
       );
     } else if (Platform.isAndroid) {
-      if (widget.useHybridComposition) {
+      if (!widget.useHybridComposition) {
+        return AndroidView(
+          onPlatformViewCreated: _onPlatformViewCreated,
+          viewType: NativeButton._viewType,
+          layoutDirection: TextDirection.ltr,
+          creationParams: widget.text,
+          creationParamsCodec: const StandardMessageCodec(),
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+            Factory(() => TapGestureRecognizer())
+          },
+        );
+      } else {
         return PlatformViewLink(
           viewType: NativeButton._viewType,
           surfaceFactory: (
@@ -87,17 +98,6 @@ class _NativeButtonState extends State<NativeButton> {
               ..addOnPlatformViewCreatedListener(_onPlatformViewCreated)
               ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
               ..create();
-          },
-        );
-      } else {
-        return AndroidView(
-          onPlatformViewCreated: _onPlatformViewCreated,
-          viewType: NativeButton._viewType,
-          layoutDirection: TextDirection.ltr,
-          creationParams: widget.text,
-          creationParamsCodec: const StandardMessageCodec(),
-          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-            Factory(() => LongPressGestureRecognizer())
           },
         );
       }

@@ -24,7 +24,7 @@ class _ButtonClickCounterState extends State<ButtonClickCounter> {
         text: "$_counter",
         onClick: () {
           _counter = incrementWithFFI(_counter);
-          return '$_counter';
+          return "$_counter";
         },
       );
 }
