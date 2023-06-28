@@ -61,33 +61,34 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const Text(
+                'Elapsed',
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: stopWatches.map((IStopwatch sw) {
+                  return StreamBuilder(
+                    initialData: sw.elapsed,
+                    stream: sw.elapsedStream,
+                    builder: (context, snapshot) {
+                      final elapsed =
+                          (snapshot.data!.inMilliseconds.toDouble() / 1e3)
+                              .toStringAsFixed(1);
+                      return Text(
+                        "${sw.name} $elapsed sec.",
+                        style: Theme.of(context).textTheme.headlineLarge,
+                        textAlign: TextAlign.right,
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 50),
               const SizedBox(
                 height: 60,
                 width: 200,
                 child: ButtonClickCounter(),
               ),
-              const SizedBox(height: 50),
-              const Text(
-                'Elapsed',
-              ),
-              Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: stopWatches.map((IStopwatch sw) {
-                    return StreamBuilder(
-                      initialData: sw.elapsed,
-                      stream: sw.elapsedStream,
-                      builder: (context, snapshot) {
-                        final elapsed =
-                            (snapshot.data!.inMilliseconds.toDouble() / 1e3)
-                                .toStringAsFixed(1);
-                        return Text(
-                          "${sw.name} $elapsed sec.",
-                          style: Theme.of(context).textTheme.headlineLarge,
-                          textAlign: TextAlign.right,
-                        );
-                      },
-                    );
-                  }).toList()),
             ],
           ),
         ),
