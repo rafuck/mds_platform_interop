@@ -26,8 +26,10 @@ class StopwatchApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   HomePage({super.key});
   final stopWatches = [
+    // Hide for presentation
+    // StopwatchBinary(),
+
     StopwatchChannels(),
-    //StopwatchBinary(),
     StopwatchStd(),
   ];
 
