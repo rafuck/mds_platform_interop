@@ -99,6 +99,7 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
     */
   }
 
+  /* Hide stopwatch based on BinaryMessenger
   private fun binaryMessageHandler(message: ByteBuffer?, @NonNull reply: BinaryReply){
     if (message == null){
       Log.e("MSG", "Received: NULL")
@@ -127,4 +128,5 @@ class MdsStopwatchPlugin: FlutterPlugin, MethodCallHandler, StreamHandler {
 
     return Charsets.UTF_8.decode(message).toString()
   }
+  */
 }
