@@ -47,7 +47,7 @@ class MethodChannelMdsStopwatch extends MdsStopwatchPlatform {
     await _safeInvoke('reset');
   }
 
-  Stream<dynamic>? _eventChannelStream;
+  static Stream<dynamic>? _eventChannelStream;
   @override
   Stream<Duration> get elapsedStream {
     _eventChannelStream ??= eventChannel.receiveBroadcastStream();
